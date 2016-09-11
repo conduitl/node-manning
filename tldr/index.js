@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const read = require('node-readability');
 const app = express();
 const Article = require('./db').Article;
+
+const url = 'http://www.manning.com/cantelon2/';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,11 +32,19 @@ app.delete('/articles/:id', (req, res, next) => {
     });
 });
 
-// app.post('/articles', (req, res, next) => {
-//     let article = { title: req.body.title };
-//     articles.push(article);
-//     res.send(article);
-// });
+app.post('/articles', (req, res, next) => {
+    let url = req.body.url;
+    
+    read(url, (err, result) => {
+        Article.create(
+            { title: result.title, content: result.content },
+            ( err, article ) => {
+                if (err) return next(err);
+                res.send('OK');
+            }
+        );
+    });
+});
 
 app.listen(process.env.PORT || 3000);
 
