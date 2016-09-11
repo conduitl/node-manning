@@ -27,14 +27,7 @@ app.get('/articles/:id', (req, res, next) => {
     let id = req.params.id;
     Article.find(id, (err, article) => {
         if (err) return next(err);
-        res.format({
-            html: function(){
-                res.render('articles.ejs', { articles : articles });
-            },
-            json: function() {
-                res.send(articles);
-            }
-        });
+        res.send(article);
     });
 });
 
