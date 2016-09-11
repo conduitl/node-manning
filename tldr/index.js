@@ -12,7 +12,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/articles', (req, res, next) => {
     Article.all( (err, articles) => {
         if (err) return next(err);
-        res.send(articles);
+        res.format({
+            html: function(){
+                res.render('articles.ejs', { articles : articles });
+            },
+            json: function() {
+                res.send(articles);
+            }
+        });
     });
 });
 
@@ -20,7 +27,14 @@ app.get('/articles/:id', (req, res, next) => {
     let id = req.params.id;
     Article.find(id, (err, article) => {
         if (err) return next(err);
-        res.send(article);
+        res.format({
+            html: function(){
+                res.render('articles.ejs', { articles : articles });
+            },
+            json: function() {
+                res.send(articles);
+            }
+        });
     });
 });
 
